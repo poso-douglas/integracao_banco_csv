@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "integracao-banco-csv"
+version = "0.1.0"
+description = ""
+authors = ["Douglas Poso <douglas.poso@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "^2.0.31"
+pandera = {extras = ["io"], version = "^0.19.3"}
+pandas = "^2.2.2"
+python-dotenv = "^1.0.1"
+pymssql = "^2.3.0"
+numpy = "1.26.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
