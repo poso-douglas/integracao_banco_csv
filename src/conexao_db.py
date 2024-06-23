@@ -5,6 +5,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 import pandera as pa
+from customer import SchemaCustomer,SchemaCustomerCSV
+from datetime import datetime, timedelta
+import numpy as np
 
 
 def load_settings():
@@ -21,6 +24,8 @@ def load_settings():
     }
     return settings
 
+
+@pa.check_output(SchemaCustomer)
 def read_sql(query: str) -> pd.DataFrame:
     settings =  load_settings()
     connection = f"mssql+pymssql://{settings['db_user']}:{settings['db_pass']}@{settings['db_host']}/{settings['db_name']}"
@@ -32,12 +37,24 @@ def read_sql(query: str) -> pd.DataFrame:
     
     return df
 
+@pa.check_input(SchemaCustomer)
+@pa.check_output(SchemaCustomerCSV)
+def transform(df: pd.DataFrame):
+    df["MaritalStatus"] = np.where(df["MaritalStatus"] == "S","Single","Married")
+    df["Gender"] = np.where(df["Gender"] == "M","Male","Female")
+    df["FullName"] = df["FirstName"] + " " + df["LastName"]
+    df["type"] = 1
+    return df
 
 
 if __name__ == "__main__":
     query = "select * from Customer"
     df = read_sql(query)
-    schema_customer = pa.infer_schema(df)
-    with open('schemas/customer.py','w',encoding='utf-8') as arquivo:
-        arquivo.write(schema_customer.to_script())
-    print(df)
+    df2 = transform(df)
+    #print(df2)
+    df2.to_csv("output/Customers.csv",sep=";",header=True)
+
+    # schema_customer = pa.infer_schema(df)
+    # with open('src/customer.py','w',encoding='utf-8') as arquivo:
+    #     arquivo.write(schema_customer.to_script())
+    # print(df)
