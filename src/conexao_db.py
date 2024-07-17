@@ -5,7 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 import pandera as pa
-from customer import SchemaCustomer,SchemaCustomerCSV
+from .customer import SchemaCustomer,SchemaCustomerCSV
 from datetime import datetime, timedelta
 import numpy as np
 
@@ -43,16 +43,19 @@ def transform(df: pd.DataFrame):
     df["MaritalStatus"] = np.where(df["MaritalStatus"] == "S","Single","Married")
     df["Gender"] = np.where(df["Gender"] == "M","Male","Female")
     df["FullName"] = df["FirstName"] + " " + df["LastName"]
-    df["type"] = 1
     return df
 
 
+def soma_dois_numeros(n1:int, n2:int) -> int:
+    return n1 + n2
+
 if __name__ == "__main__":
-    query = "select * from Customer"
-    df = read_sql(query)
-    df2 = transform(df)
-    #print(df2)
-    df2.to_csv("output/Customers.csv",sep=";",header=True)
+    print(soma_dois_numeros("1","2"))
+
+    # query = "select * from Customer"
+    # df = read_sql(query)
+    # df2 = transform(df)
+    # df2.to_csv("output/Customers.csv",sep=";",header=True)
 
     # schema_customer = pa.infer_schema(df)
     # with open('src/customer.py','w',encoding='utf-8') as arquivo:

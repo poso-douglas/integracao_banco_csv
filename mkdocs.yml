@@ -1,0 +1,16 @@
+site_name: Integração csv
+#  theme:
+#    name: "material"
+
+nav:
+  - Home: index.md
+  - Python file: test.md
+
+plugins:
+   - search
+   - mkdocstrings
+   - mkdocs-jupyter
+
+markdown_extensions: 
+  - pydownx.superfences
+  - pydownx.highlight
